@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 
 // ─── constants ────────────────────────────────────────────────────────────────
 
@@ -139,6 +139,81 @@ function PrimaryBtn({ children, onClick, disabled }) {
   )
 }
 
+// ─── Splash ───────────────────────────────────────────────────────────────────
+
+function SplashScreen({ onDone }) {
+  const [fadingOut, setFadingOut] = useState(false)
+
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => setFadingOut(true), 2500)
+    const doneTimer = setTimeout(() => onDone(), 3000)
+    return () => { clearTimeout(fadeTimer); clearTimeout(doneTimer) }
+  }, [onDone])
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'linear-gradient(160deg, #0B2A3B 0%, #071e2b 60%, #040f15 100%)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      opacity: fadingOut ? 0 : 1,
+      transition: 'opacity 0.5s ease',
+      pointerEvents: fadingOut ? 'none' : 'auto',
+    }}>
+      {/* ambient glows */}
+      <div style={{
+        position: 'absolute', top: '-20%', left: '-20%',
+        width: '70%', height: '60%',
+        background: 'radial-gradient(ellipse, rgba(0,229,197,0.07) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '-10%', right: '-15%',
+        width: '60%', height: '50%',
+        background: 'radial-gradient(ellipse, rgba(255,184,0,0.05) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div className="animate-fade-up" style={{ textAlign: 'center' }}>
+        <div className="animate-float" style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: '80px', height: '80px', borderRadius: '24px',
+          background: 'linear-gradient(135deg, rgba(0,229,197,0.15), rgba(0,229,197,0.05))',
+          border: '1.5px solid rgba(0,229,197,0.25)',
+          fontSize: '2rem', marginBottom: '24px',
+        }}>
+          🎣
+        </div>
+
+        <div style={{
+          fontFamily: "'Unbounded', sans-serif",
+          fontSize: 'clamp(2.5rem, 10vw, 3.5rem)',
+          fontWeight: 900,
+          letterSpacing: '-0.02em',
+          lineHeight: 1,
+          background: 'linear-gradient(135deg, #F0F8FF 30%, #00E5C5 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '10px',
+        }}>
+          HOOKED
+        </div>
+
+        <p style={{
+          color: 'rgba(240,248,255,0.45)',
+          fontSize: '0.9rem',
+          fontWeight: 400,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          margin: 0,
+        }}>
+          Charter Catch Tracker
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // ─── Screen 0: Name ───────────────────────────────────────────────────────────
 
 function NameScreen({ name, setName, onNext }) {
@@ -259,23 +334,22 @@ function SpeciesScreen({ name, species, setSpecies, onNext, onBack }) {
     <ScreenShell>
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
-        padding: '24px 20px 32px',
-        maxWidth: '480px', margin: '0 auto', width: '100%',
+        maxWidth: '420px', margin: '0 auto', width: '100%',
       }}>
 
-        {/* header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <BackButton onClick={onBack} />
-          <ProgressBar step={1} />
+        {/* progress bar — consistent with all screens: paddingTop 49px */}
+        <div className="animate-fade-up" style={{ paddingTop: '49px', paddingLeft: '6px', paddingRight: '6px' }}>
+          <ProgressBar step={2} />
         </div>
 
-        <div className="animate-fade-up" style={{ marginBottom: '28px' }}>
-          <p style={{ color: 'rgba(240,248,255,0.45)', fontSize: '0.85rem', marginBottom: '6px', fontWeight: 500 }}>
+        {/* heading */}
+        <div className="animate-fade-up delay-1" style={{ padding: '28px 24px 20px' }}>
+          <p style={{ color: 'rgba(240,248,255,0.45)', fontSize: '0.85rem', margin: '0 0 6px', fontWeight: 500 }}>
             Hey {name} 👋
           </p>
           <h2 style={{
             fontFamily: "'Unbounded', sans-serif",
-            fontSize: 'clamp(1.25rem, 5vw, 1.5rem)',
+            fontSize: 'clamp(1.5rem, 5vw, 1.8rem)',
             fontWeight: 700,
             color: '#F0F8FF',
             lineHeight: 1.3,
@@ -286,12 +360,13 @@ function SpeciesScreen({ name, species, setSpecies, onNext, onBack }) {
           </h2>
         </div>
 
-        {/* species grid */}
+        {/* species grid — flex: 1 fills remaining space */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: '12px',
           flex: 1,
+          padding: '0 20px',
         }}>
           {SPECIES.map((s, i) => {
             const selected = species === s.name
@@ -378,10 +453,48 @@ function SpeciesScreen({ name, species, setSpecies, onNext, onBack }) {
           })}
         </div>
 
-        <div style={{ marginTop: '20px' }}>
-          <PrimaryBtn onClick={onNext} disabled={!species}>
+        {/* bottom actions — consistent with all screens */}
+        <div className="animate-fade-up delay-6" style={{
+          padding: '16px 24px 40px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px',
+        }}>
+          <button
+            onClick={onNext}
+            disabled={!species}
+            style={{
+              width: '100%',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              background: !species
+                ? 'rgba(240,248,255,0.08)'
+                : 'linear-gradient(135deg, #00E5C5 0%, #00c8ac 100%)',
+              color: !species ? 'rgba(240,248,255,0.25)' : '#0B2A3B',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '18px',
+              fontWeight: 600,
+              cursor: !species ? 'not-allowed' : 'pointer',
+              letterSpacing: '0.02em',
+              boxShadow: !species ? 'none' : '0 0 28px rgba(0,229,197,0.35)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => { if (species) { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,229,197,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = !species ? 'none' : '0 0 28px rgba(0,229,197,0.35)'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
             Continue →
-          </PrimaryBtn>
+          </button>
+          <button
+            onClick={onBack}
+            style={{
+              background: 'none', border: 'none',
+              color: '#FFFFFF',
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: '16px', fontWeight: 500,
+              cursor: 'pointer', padding: '4px 0',
+            }}
+          >
+            Back
+          </button>
         </div>
       </div>
     </ScreenShell>
@@ -609,22 +722,21 @@ function PhotoScreen({ species, length, photo, setPhoto, onSubmit, onBack }) {
     <ScreenShell>
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
-        padding: '24px 24px 40px',
         maxWidth: '420px', margin: '0 auto', width: '100%',
       }}>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <BackButton onClick={onBack} />
-          <ProgressBar step={3} />
+        {/* progress bar — consistent with all screens: paddingTop 49px */}
+        <div className="animate-fade-up" style={{ paddingTop: '49px', paddingLeft: '6px', paddingRight: '6px' }}>
+          <ProgressBar step={4} />
         </div>
 
-        <div className="animate-fade-up" style={{ marginBottom: '24px' }}>
-          <p style={{ color: 'rgba(240,248,255,0.45)', fontSize: '0.85rem', marginBottom: '6px', fontWeight: 500 }}>
+        <div className="animate-fade-up delay-1" style={{ padding: '28px 24px 20px' }}>
+          <p style={{ color: 'rgba(240,248,255,0.45)', fontSize: '0.85rem', margin: '0 0 6px', fontWeight: 500 }}>
             {length}cm {species}
           </p>
           <h2 style={{
             fontFamily: "'Unbounded', sans-serif",
-            fontSize: 'clamp(1.2rem, 5vw, 1.45rem)',
+            fontSize: 'clamp(1.5rem, 5vw, 1.8rem)',
             fontWeight: 700,
             color: '#F0F8FF',
             lineHeight: 1.3,
@@ -635,92 +747,123 @@ function PhotoScreen({ species, length, photo, setPhoto, onSubmit, onBack }) {
           </h2>
         </div>
 
-        {/* upload zone */}
-        <div
-          className="animate-fade-up delay-1"
-          onClick={() => fileRef.current?.click()}
-          onDrop={onDrop}
-          onDragOver={e => e.preventDefault()}
-          style={{
-            flex: 1,
-            minHeight: '260px',
-            border: `2px dashed ${photo ? 'transparent' : 'rgba(240,248,255,0.15)'}`,
-            borderRadius: '20px',
-            overflow: 'hidden',
-            cursor: 'pointer',
-            position: 'relative',
-            background: photo ? 'transparent' : 'rgba(240,248,255,0.03)',
-            transition: 'all 0.2s',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onMouseEnter={e => { if (!photo) { e.currentTarget.style.borderColor = 'rgba(255,184,0,0.4)'; e.currentTarget.style.background = 'rgba(255,184,0,0.04)' } }}
-          onMouseLeave={e => { if (!photo) { e.currentTarget.style.borderColor = 'rgba(240,248,255,0.15)'; e.currentTarget.style.background = 'rgba(240,248,255,0.03)' } }}
-        >
-          {photo ? (
-            <>
+        {/* upload zone — horizontal padding matches other screens */}
+        <div style={{ flex: 1, padding: '0 24px', minHeight: 0 }}>
+          <div
+            className="animate-fade-up delay-2"
+            onClick={() => !photo && fileRef.current?.click()}
+            onDrop={onDrop}
+            onDragOver={e => e.preventDefault()}
+            style={{
+              height: '100%',
+              minHeight: '220px',
+              border: `2px dashed ${photo ? 'transparent' : 'rgba(240,248,255,0.15)'}`,
+              borderRadius: '20px',
+              overflow: 'hidden',
+              cursor: photo ? 'default' : 'pointer',
+              position: 'relative',
+              background: photo ? 'transparent' : 'rgba(240,248,255,0.03)',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseEnter={e => { if (!photo) { e.currentTarget.style.borderColor = 'rgba(255,184,0,0.4)'; e.currentTarget.style.background = 'rgba(255,184,0,0.04)' } }}
+            onMouseLeave={e => { if (!photo) { e.currentTarget.style.borderColor = 'rgba(240,248,255,0.15)'; e.currentTarget.style.background = 'rgba(240,248,255,0.03)' } }}
+          >
+            {photo ? (
               <img
                 src={photo}
                 alt="Your catch"
-                style={{
-                  width: '100%', height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: '18px',
-                }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }}
               />
-              {/* overlay to re-tap */}
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: 'rgba(11,42,59,0.5)',
-                display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center',
-                opacity: 0, transition: 'opacity 0.2s',
-                borderRadius: '18px',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '0' }}
-              >
-                <span style={{ fontSize: '2rem' }}>📷</span>
-                <span style={{ color: '#F0F8FF', fontSize: '0.85rem', marginTop: '8px', fontWeight: 500 }}>Change photo</span>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '32px 20px' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '14px', lineHeight: 1 }}>📷</div>
+                <p style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: '#F0F8FF', fontSize: '1rem', fontWeight: 600, margin: '0 0 6px',
+                }}>
+                  Tap to add a photo
+                </p>
+                <p style={{ color: 'rgba(240,248,255,0.35)', fontSize: '0.8rem', margin: 0 }}>
+                  Camera or gallery • Optional
+                </p>
               </div>
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '32px 20px' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '14px', lineHeight: 1 }}>📷</div>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                color: '#F0F8FF',
-                fontSize: '1rem',
-                fontWeight: 600,
-                margin: '0 0 6px',
-              }}>
-                Tap to add a photo
-              </p>
-              <p style={{
-                color: 'rgba(240,248,255,0.35)',
-                fontSize: '0.8rem',
-                margin: 0,
-              }}>
-                Camera or gallery • Optional
-              </p>
-            </div>
-          )}
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={e => handleFile(e.target.files[0])}
-            style={{ display: 'none' }}
-          />
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={e => handleFile(e.target.files[0])}
+              style={{ display: 'none' }}
+            />
+          </div>
         </div>
 
-        <div className="animate-fade-up delay-2" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <PrimaryBtn onClick={onSubmit}>
-            {photo ? 'Log My Catch 🎣' : 'Skip & Log Catch'}
-          </PrimaryBtn>
+        {/* bottom actions — consistent with all screens */}
+        <div className="animate-fade-up delay-3" style={{
+          padding: '16px 24px 40px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
+        }}>
+          {photo ? (
+            <>
+              <button
+                onClick={onSubmit}
+                style={{
+                  width: '100%', padding: '16px 24px', borderRadius: '12px', border: 'none',
+                  background: 'linear-gradient(135deg, #00E5C5 0%, #00c8ac 100%)',
+                  color: '#0B2A3B', fontFamily: "'Inter', sans-serif", fontSize: '18px',
+                  fontWeight: 600, cursor: 'pointer', letterSpacing: '0.02em',
+                  boxShadow: '0 0 28px rgba(0,229,197,0.35)', transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,229,197,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(0,229,197,0.35)'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Continue →
+              </button>
+              <button
+                onClick={() => fileRef.current?.click()}
+                style={{
+                  background: 'none', border: 'none', color: 'rgba(240,248,255,0.4)',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: '0.85rem', fontWeight: 500,
+                  cursor: 'pointer', padding: '4px 0', textAlign: 'center',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'rgba(240,248,255,0.7)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,248,255,0.4)' }}
+              >
+                Retake photo
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={onSubmit}
+                style={{
+                  width: '100%', padding: '16px 24px', borderRadius: '12px', border: 'none',
+                  background: 'linear-gradient(135deg, #00E5C5 0%, #00c8ac 100%)', color: '#0B2A3B',
+                  fontFamily: "'Inter', sans-serif", fontSize: '18px', fontWeight: 600,
+                  cursor: 'pointer', letterSpacing: '0.02em',
+                  boxShadow: '0 0 28px rgba(0,229,197,0.35)', transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,229,197,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(0,229,197,0.35)'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Skip &amp; Log Catch
+              </button>
+              <button
+                onClick={onBack}
+                style={{
+                  background: 'none', border: 'none', color: '#FFFFFF',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: '16px', fontWeight: 500,
+                  cursor: 'pointer', padding: '4px 0',
+                }}
+              >
+                Back
+              </button>
+            </>
+          )}
         </div>
       </div>
     </ScreenShell>
@@ -740,7 +883,7 @@ function CatchCardScreen({ catchData, onAnother, onLeaderboard, onUndo }) {
       const all = JSON.parse(localStorage.getItem('hooked_catches') || '[]')
       const len = Number(length)
       const rank = all.filter(c => Number(c.length) > len).length + 1
-      // tied if another catch (not this one) shares the same length
+      // tied if any other catch (regardless of species) shares the same length
       const tied = all.filter(c => c.id !== catchData?.id && Number(c.length) === len).length > 0
       return { rank, tied }
     } catch { return { rank: 1, tied: false } }
@@ -774,7 +917,7 @@ function CatchCardScreen({ catchData, onAnother, onLeaderboard, onUndo }) {
             margin: 0,
             letterSpacing: '0.01em',
           }}>
-            {tied ? `You're tied for #${rank} on the boat!` : `You're #${rank} on the boat!`}
+            {tied ? `This ${species} is tied for #${rank} on the boat!` : `This ${species} is #${rank} on the boat!`}
           </p>
         </div>
 
@@ -1397,6 +1540,7 @@ function LeaderboardScreen({ onLogAnother }) {
 // ─── App root ─────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true)
   const [screen, setScreen]   = useLocalStorage('hooked_screen', 0)
   const [name, setName]       = useLocalStorage('hooked_name', '')
   const [species, setSpecies] = useLocalStorage('hooked_species', '')
@@ -1445,6 +1589,7 @@ export default function App() {
 
   return (
     <>
+      {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
       {screen === 0 && (
         <NameScreen
           name={name}
