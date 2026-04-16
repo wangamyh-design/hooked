@@ -69,11 +69,11 @@ function ScreenShell({ children }) {
 
 function ProgressBar({ step, total = 4 }) {
   return (
-    <div style={{ display: 'flex', gap: '6px', padding: '0 24px' }}>
+    <div style={{ display: 'flex', gap: '8px', padding: '0 24px' }}>
       {Array.from({ length: total }).map((_, i) => (
         <div key={i} style={{
-          flex: 1, height: '3px', borderRadius: '99px',
-          background: i < step ? '#00E5C5' : 'rgba(240,248,255,0.12)',
+          flex: 1, height: '4px', borderRadius: '99px',
+          background: i < step ? '#00E5C5' : 'rgba(240,248,255,0.2)',
           transition: 'background 0.4s ease',
         }} />
       ))}
@@ -146,107 +146,107 @@ function NameScreen({ name, setName, onNext }) {
     <ScreenShell>
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', padding: '48px 28px 40px',
         maxWidth: '420px', margin: '0 auto', width: '100%',
       }}>
 
-        {/* logo mark */}
-        <div className="animate-fade-up" style={{ marginBottom: '40px', textAlign: 'center' }}>
-          <div className="animate-float" style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: '80px', height: '80px', borderRadius: '24px',
-            background: 'linear-gradient(135deg, rgba(0,229,197,0.15), rgba(0,229,197,0.05))',
-            border: '1.5px solid rgba(0,229,197,0.25)',
-            fontSize: '2rem', marginBottom: '24px',
-          }}>
-            🎣
-          </div>
-
-          <div style={{
-            fontFamily: "'Unbounded', sans-serif",
-            fontSize: 'clamp(2.5rem, 10vw, 3.5rem)',
-            fontWeight: 900,
-            letterSpacing: '-0.02em',
-            lineHeight: 1,
-            background: 'linear-gradient(135deg, #F0F8FF 30%, #00E5C5 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            marginBottom: '10px',
-          }}>
-            HOOKED
-          </div>
-
-          <p style={{
-            color: 'rgba(240,248,255,0.45)',
-            fontSize: '0.9rem',
-            fontWeight: 400,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-          }}>
-            Charter Catch Tracker
-          </p>
+        {/* progress bar — Figma: top 49px, left 6px with 24px inner padding */}
+        <div className="animate-fade-up" style={{ paddingTop: '49px', paddingLeft: '6px', paddingRight: '6px' }}>
+          <ProgressBar step={1} />
         </div>
 
-        {/* form */}
-        <div className="animate-fade-up delay-2" style={{ marginBottom: '32px' }}>
-          <label style={{
-            display: 'block',
+        {/* heading + input — Figma: top 198px, left 30px, gap 39px */}
+        <div className="animate-fade-up delay-2" style={{
+          display: 'flex', flexDirection: 'column', gap: '39px',
+          paddingTop: '100px', paddingLeft: '30px', paddingRight: '30px',
+        }}>
+          <h1 style={{
             fontFamily: "'Unbounded', sans-serif",
-            fontSize: '1rem',
-            fontWeight: 600,
-            color: '#F0F8FF',
-            marginBottom: '20px',
-            lineHeight: 1.4,
+            fontSize: '32px',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            margin: 0,
+            lineHeight: 1,
           }}>
-            What's your name, <span style={{ color: '#00E5C5' }}>angler?</span>
-          </label>
+            Every legend needs a name
+          </h1>
 
           <input
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && name.trim() && onNext()}
-            placeholder="Captain…"
+            placeholder="Enter your name to get started"
             autoFocus
             style={{
               width: '100%',
-              padding: '15px 18px',
+              padding: '12px',
               background: 'rgba(240,248,255,0.05)',
-              border: '1.5px solid rgba(240,248,255,0.12)',
-              borderRadius: '14px',
+              border: '1.5px solid #00E5C5',
+              borderRadius: '12px',
               color: '#F0F8FF',
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: '1.125rem',
+              fontSize: '16px',
               fontWeight: 400,
               outline: 'none',
               transition: 'all 0.2s',
+              boxSizing: 'border-box',
             }}
             onFocus={e => {
-              e.target.style.borderColor = '#00E5C5'
               e.target.style.background = 'rgba(0,229,197,0.06)'
               e.target.style.boxShadow = '0 0 0 4px rgba(0,229,197,0.1)'
             }}
             onBlur={e => {
-              e.target.style.borderColor = 'rgba(240,248,255,0.12)'
               e.target.style.background = 'rgba(240,248,255,0.05)'
               e.target.style.boxShadow = 'none'
             }}
           />
         </div>
 
-        <div className="animate-fade-up delay-3">
-          <PrimaryBtn onClick={onNext} disabled={!name.trim()}>
-            Let's Fish →
-          </PrimaryBtn>
-        </div>
+        {/* flex spacer pushes button to bottom */}
+        <div style={{ flex: 1 }} />
 
-        <p className="animate-fade-up delay-4" style={{
-          textAlign: 'center', marginTop: '20px',
-          color: 'rgba(240,248,255,0.2)', fontSize: '0.75rem',
+        {/* bottom actions — Figma: button top 700px, "Back to home" top ~796px in 874px frame */}
+        <div className="animate-fade-up delay-3" style={{
+          padding: '0 30px 40px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px',
         }}>
-          Your catch data stays on this device
-        </p>
+          <button
+            onClick={onNext}
+            disabled={!name.trim()}
+            style={{
+              width: '100%',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              background: !name.trim()
+                ? 'rgba(240,248,255,0.08)'
+                : 'linear-gradient(135deg, #00E5C5 0%, #00c8ac 100%)',
+              color: !name.trim() ? 'rgba(240,248,255,0.25)' : '#0B2A3B',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '18px',
+              fontWeight: 600,
+              cursor: !name.trim() ? 'not-allowed' : 'pointer',
+              letterSpacing: '0.02em',
+              boxShadow: !name.trim() ? 'none' : '0 0 28px rgba(0,229,197,0.35)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => { if (name.trim()) { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,229,197,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = !name.trim() ? 'none' : '0 0 28px rgba(0,229,197,0.35)'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Continue →
+          </button>
+
+          <p style={{
+            margin: 0,
+            color: '#FFFFFF',
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: '16px',
+            fontWeight: 500,
+            textAlign: 'center',
+          }}>
+            Back to home
+          </p>
+        </div>
       </div>
     </ScreenShell>
   )
@@ -394,123 +394,194 @@ function LengthScreen({ species, length, setLength, onNext, onBack }) {
   const num = parseFloat(length)
   const valid = !isNaN(num) && num > 0 && num < 300
 
+  const handleDigit = (d) => {
+    setLength(prev => {
+      if (prev === '' && d === '0') return prev  // no leading zero
+      const next = prev + d
+      if (Number(next) >= 300) return prev        // cap at 299
+      return next
+    })
+  }
+
+  const handleBackspace = () => setLength(prev => prev.slice(0, -1))
+
+  // 3×3 digits then bottom row: empty / 0 / ←
+  const padRows = [
+    ['1','2','3'],
+    ['4','5','6'],
+    ['7','8','9'],
+    [null,'0','←'],
+  ]
+
   return (
     <ScreenShell>
       <div style={{
         flex: 1, display: 'flex', flexDirection: 'column',
-        padding: '24px 24px 40px',
         maxWidth: '420px', margin: '0 auto', width: '100%',
       }}>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <BackButton onClick={onBack} />
-          <ProgressBar step={2} />
+        {/* progress bar — Figma: top 49px, 3 active segments */}
+        <div className="animate-fade-up" style={{ paddingTop: '49px', paddingLeft: '6px', paddingRight: '6px' }}>
+          <ProgressBar step={3} />
         </div>
 
-        <div className="animate-fade-up" style={{ marginBottom: '40px' }}>
-          <p style={{ color: 'rgba(240,248,255,0.45)', fontSize: '0.85rem', marginBottom: '6px', fontWeight: 500 }}>
-            Nice {species}! 🎉
-          </p>
-          <h2 style={{
+        {/* heading + subtitle — Figma: heading top 116px, subtitle top 169px */}
+        <div className="animate-fade-up delay-1" style={{ paddingTop: '63px', paddingLeft: '25px', paddingRight: '25px' }}>
+          <h1 style={{
             fontFamily: "'Unbounded', sans-serif",
-            fontSize: 'clamp(1.2rem, 5vw, 1.45rem)',
-            fontWeight: 700,
-            color: '#F0F8FF',
-            lineHeight: 1.3,
+            fontSize: '32px',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            margin: '0 0 21px',
+            lineHeight: 1,
+          }}>
+            How long was your catch?
+          </h1>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: '18px',
+            fontWeight: 500,
+            color: '#D9D9D9',
             margin: 0,
           }}>
-            How long was<br />
-            <span style={{ color: '#00E5C5' }}>your catch?</span>
-          </h2>
+            Measure tip to tail in cm
+          </p>
         </div>
 
-        {/* measurement card */}
-        <div className="animate-fade-up delay-1" style={{
-          background: 'rgba(240,248,255,0.04)',
-          border: '1.5px solid rgba(240,248,255,0.08)',
-          borderRadius: '20px',
-          padding: '32px 24px',
-          marginBottom: '32px',
-          textAlign: 'center',
+        {/* large display — Figma: top 240px, number 64px teal, "cm" 20px 60% white */}
+        <div className="animate-fade-up delay-2" style={{
+          paddingTop: '48px',
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'center',
+          gap: '8px',
         }}>
-          {/* ruler icon */}
-          <div style={{ fontSize: '2.5rem', marginBottom: '20px', lineHeight: 1 }}>📏</div>
-
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="number"
-              inputMode="decimal"
-              value={length}
-              onChange={e => setLength(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && valid && onNext()}
-              placeholder="0"
-              min="1"
-              max="299"
-              autoFocus
-              style={{
-                flex: 1,
-                padding: '16px 60px 16px 18px',
-                background: 'rgba(240,248,255,0.06)',
-                border: '1.5px solid rgba(240,248,255,0.12)',
-                borderRadius: '14px',
-                color: '#F0F8FF',
-                fontFamily: "'Unbounded', sans-serif",
-                fontSize: '2rem',
-                fontWeight: 700,
-                textAlign: 'center',
-                outline: 'none',
-                transition: 'all 0.2s',
-                MozAppearance: 'textfield',
-              }}
-              onFocus={e => {
-                e.target.style.borderColor = '#00E5C5'
-                e.target.style.background = 'rgba(0,229,197,0.06)'
-                e.target.style.boxShadow = '0 0 0 4px rgba(0,229,197,0.1)'
-              }}
-              onBlur={e => {
-                e.target.style.borderColor = 'rgba(240,248,255,0.12)'
-                e.target.style.background = 'rgba(240,248,255,0.06)'
-                e.target.style.boxShadow = 'none'
-              }}
-            />
-            <span style={{
-              position: 'absolute', right: '18px',
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: '1rem', fontWeight: 600,
-              color: 'rgba(240,248,255,0.4)',
-              pointerEvents: 'none',
-            }}>cm</span>
-          </div>
-
-          {/* quick select */}
-          <div style={{ display: 'flex', gap: '8px', marginTop: '16px', justifyContent: 'center' }}>
-            {[30, 45, 60, 75, 90].map(v => (
-              <button
-                key={v}
-                onClick={() => setLength(String(v))}
-                style={{
-                  padding: '6px 12px',
-                  background: length === String(v) ? 'rgba(0,229,197,0.15)' : 'rgba(240,248,255,0.05)',
-                  border: `1px solid ${length === String(v) ? 'rgba(0,229,197,0.4)' : 'rgba(240,248,255,0.1)'}`,
-                  borderRadius: '99px',
-                  color: length === String(v) ? '#00E5C5' : 'rgba(240,248,255,0.45)',
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
+          <span style={{
+            fontFamily: "'Unbounded', sans-serif",
+            fontSize: '64px',
+            fontWeight: 800,
+            color: '#00E5C5',
+            lineHeight: 1,
+          }}>
+            {length || '0'}
+          </span>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: '20px',
+            fontWeight: 400,
+            color: 'rgba(240,248,255,0.6)',
+          }}>
+            cm
+          </span>
         </div>
 
-        <div className="animate-fade-up delay-2">
-          <PrimaryBtn onClick={onNext} disabled={!valid}>
+        {/* number pad — Figma: top 367px, left 45px, 300px wide, 16px gaps, 64px tall buttons */}
+        <div className="animate-fade-up delay-3" style={{ paddingTop: '63px', padding: '63px 60px 0' }}>
+          {padRows.map((row, ri) => (
+            <div key={ri} style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '16px',
+              marginBottom: ri < padRows.length - 1 ? '16px' : 0,
+            }}>
+              {row.map((key, ci) => {
+                if (key === null) return <div key={ci} />
+                const isBackspace = key === '←'
+                return (
+                  <button
+                    key={ci}
+                    onClick={() => isBackspace ? handleBackspace() : handleDigit(key)}
+                    style={{
+                      height: '64px',
+                      borderRadius: '16px',
+                      border: '2px solid rgba(240,248,255,0.2)',
+                      background: 'rgba(240,248,255,0.05)',
+                      color: '#FFFFFF',
+                      fontFamily: isBackspace ? "'DM Sans', sans-serif" : "'Unbounded', sans-serif",
+                      fontSize: isBackspace ? '18px' : '24px',
+                      fontWeight: isBackspace ? 500 : 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.1s ease',
+                      userSelect: 'none',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'rgba(240,248,255,0.1)'
+                      e.currentTarget.style.borderColor = 'rgba(240,248,255,0.35)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'rgba(240,248,255,0.05)'
+                      e.currentTarget.style.borderColor = 'rgba(240,248,255,0.2)'
+                    }}
+                    onMouseDown={e => {
+                      e.currentTarget.style.background = 'rgba(0,229,197,0.12)'
+                      e.currentTarget.style.borderColor = 'rgba(0,229,197,0.3)'
+                      e.currentTarget.style.transform = 'scale(0.95)'
+                    }}
+                    onMouseUp={e => {
+                      e.currentTarget.style.background = 'rgba(240,248,255,0.1)'
+                      e.currentTarget.style.borderColor = 'rgba(240,248,255,0.35)'
+                      e.currentTarget.style.transform = 'scale(1)'
+                    }}
+                  >
+                    {key}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ flex: 1 }} />
+
+        {/* bottom actions — Figma: Continue top 759px, Back top ~838px in 874px frame */}
+        <div className="animate-fade-up delay-4" style={{
+          padding: '0 30px 40px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px',
+        }}>
+          <button
+            onClick={onNext}
+            disabled={!valid}
+            style={{
+              width: '100%',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              background: !valid
+                ? 'rgba(240,248,255,0.08)'
+                : 'linear-gradient(135deg, #00E5C5 0%, #00c8ac 100%)',
+              color: !valid ? 'rgba(240,248,255,0.25)' : '#0B2A3B',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '18px',
+              fontWeight: 600,
+              cursor: !valid ? 'not-allowed' : 'pointer',
+              letterSpacing: '0.02em',
+              boxShadow: !valid ? 'none' : '0 0 28px rgba(0,229,197,0.35)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => { if (valid) { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,229,197,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = !valid ? 'none' : '0 0 28px rgba(0,229,197,0.35)'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
             Continue →
-          </PrimaryBtn>
+          </button>
+
+          <button
+            onClick={onBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#FFFFFF',
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: '16px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              padding: '4px 0',
+            }}
+          >
+            Back
+          </button>
         </div>
       </div>
     </ScreenShell>
@@ -1042,14 +1113,11 @@ function LeaderboardScreen({ onLogAnother }) {
 
           {/* filter chips — horizontal scroll */}
           <div
-            className="animate-fade-up delay-1"
+            className="animate-fade-up delay-1 scroll-x-hidden"
             style={{
               display: 'flex',
               gap: '8px',
-              overflowX: 'auto',
               paddingBottom: '16px',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
             }}
           >
             {chips.map(chip => {

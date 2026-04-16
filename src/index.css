@@ -76,3 +76,13 @@ body {
 .delay-4 { animation-delay: 0.32s; }
 .delay-5 { animation-delay: 0.40s; }
 .delay-6 { animation-delay: 0.48s; }
+
+.scroll-x-hidden {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-x-hidden::-webkit-scrollbar {
+  display: none;
+}
