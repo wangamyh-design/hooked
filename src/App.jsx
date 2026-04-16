@@ -185,10 +185,10 @@ function SplashScreen({ onDone }) {
         animation: 'hookDescend 1.5s ease-in-out both',
       }}>
         <svg width="40" height="68" viewBox="0 0 40 68" fill="none">
-          {/* Eye ring */}
+          {/* Eye ring — centred at x=20 */}
           <circle cx="20" cy="7" r="6" stroke="#00E5C5" strokeWidth="2.2"/>
-          {/* Shank → J-bend → barb */}
-          <path d="M20,13 L20,46 C20,59 34,59 34,46 C34,37 28,34 23,34"
+          {/* Shank → J-bend → barb tip returns to x=20 so it meets the fish centre */}
+          <path d="M20,13 L20,47 C20,62 37,62 37,47 C37,38 31,34 20,34"
             stroke="#00E5C5" strokeWidth="2.2" strokeLinecap="round"/>
         </svg>
       </div>
