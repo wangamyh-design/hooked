@@ -588,8 +588,8 @@ function LengthScreen({ species, length, setLength, onNext, onBack }) {
           </span>
         </div>
 
-        {/* number pad — Figma: top 367px, left 45px, 300px wide, 16px gaps, 64px tall buttons */}
-        <div className="animate-fade-up delay-3" style={{ paddingTop: '63px', padding: '63px 60px 0' }}>
+        {/* number pad — 300px wide, 16px gaps, 64px tall buttons */}
+        <div className="animate-fade-up delay-3" style={{ padding: '40px 60px 32px' }}>
           {padRows.map((row, ri) => (
             <div key={ri} style={{
               display: 'grid',
@@ -1528,9 +1528,28 @@ function LeaderboardScreen({ onLogAnother }) {
 
         {/* footer CTA */}
         <div className="animate-fade-up" style={{ padding: '16px 24px 32px' }}>
-          <PrimaryBtn onClick={onLogAnother}>
+          <button
+            onClick={onLogAnother}
+            style={{
+              width: '100%',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #00E5C5 0%, #00c8ac 100%)',
+              color: '#0B2A3B',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '18px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              letterSpacing: '0.02em',
+              boxShadow: '0 0 28px rgba(0,229,197,0.35)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(0,229,197,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 28px rgba(0,229,197,0.35)'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
             Log Another Catch
-          </PrimaryBtn>
+          </button>
         </div>
       </div>
     </ScreenShell>
