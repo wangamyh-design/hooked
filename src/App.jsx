@@ -145,45 +145,78 @@ function SplashScreen({ onDone }) {
   const [fadingOut, setFadingOut] = useState(false)
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setFadingOut(true), 2500)
-    const doneTimer = setTimeout(() => onDone(), 3000)
+    const fadeTimer = setTimeout(() => setFadingOut(true), 4500)
+    const doneTimer = setTimeout(() => onDone(), 5000)
     return () => { clearTimeout(fadeTimer); clearTimeout(doneTimer) }
   }, [onDone])
 
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'linear-gradient(160deg, #0B2A3B 0%, #071e2b 60%, #040f15 100%)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: '#0B2A3B',
+      overflow: 'hidden',
       opacity: fadingOut ? 0 : 1,
-      transition: 'opacity 0.5s ease',
+      transition: 'opacity 0.5s ease-in-out',
       pointerEvents: fadingOut ? 'none' : 'auto',
     }}>
-      {/* ambient glows */}
+
+      {/* ambient glow — top-left teal */}
       <div style={{
         position: 'absolute', top: '-20%', left: '-20%',
         width: '70%', height: '60%',
         background: 'radial-gradient(ellipse, rgba(0,229,197,0.07) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
+      {/* ambient glow — bottom-right gold */}
       <div style={{
         position: 'absolute', bottom: '-10%', right: '-15%',
         width: '60%', height: '50%',
-        background: 'radial-gradient(ellipse, rgba(255,184,0,0.05) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse, rgba(255,184,0,0.04) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
-      <div className="animate-fade-up" style={{ textAlign: 'center' }}>
-        <div className="animate-float" style={{
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: '80px', height: '80px', borderRadius: '24px',
-          background: 'linear-gradient(135deg, rgba(0,229,197,0.15), rgba(0,229,197,0.05))',
-          border: '1.5px solid rgba(0,229,197,0.25)',
-          fontSize: '2rem', marginBottom: '24px',
-        }}>
-          🎣
-        </div>
+      {/* ── Phase 1: hook descends from top center (0–1.5s) ── */}
+      {/* top: calc(36vh - 68px) places the hook barb (bottom of 68px SVG) at 36vh */}
+      <div style={{
+        position: 'absolute',
+        top: 'calc(36vh - 68px)',
+        left: 0, right: 0,
+        display: 'flex', justifyContent: 'center',
+        animation: 'hookDescend 1.5s ease-in-out both',
+      }}>
+        <svg width="40" height="68" viewBox="0 0 40 68" fill="none">
+          {/* Eye ring */}
+          <circle cx="20" cy="7" r="6" stroke="#00E5C5" strokeWidth="2.2"/>
+          {/* Shank → J-bend → barb */}
+          <path d="M20,13 L20,46 C20,59 34,59 34,46 C34,37 28,34 23,34"
+            stroke="#00E5C5" strokeWidth="2.2" strokeLinecap="round"/>
+        </svg>
+      </div>
 
+      {/* ── Phase 2: fish swims up from bottom with gentle wiggle (delay 1.5s) ── */}
+      {/* base top: 72vh, fishRise ends at translateY(-36vh) → visual position: 36vh */}
+      <div style={{
+        position: 'absolute',
+        top: '72vh',
+        left: 0, right: 0,
+        display: 'flex', justifyContent: 'center',
+        fontSize: '2.5rem', lineHeight: 1,
+        animation: 'fishRise 1s ease-in-out 1.5s both',
+      }}>
+        🎣
+      </div>
+
+      {/* ── Phase 3: HOOKED wordmark + subtitle (delay 2.5s) ── */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center',
+        gap: '12px',
+      }}>
         <div style={{
           fontFamily: "'Unbounded', sans-serif",
           fontSize: 'clamp(2.5rem, 10vw, 3.5rem)',
@@ -194,11 +227,10 @@ function SplashScreen({ onDone }) {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
-          marginBottom: '10px',
+          animation: 'splashContentIn 0.5s ease-in-out 2.5s both',
         }}>
           HOOKED
         </div>
-
         <p style={{
           color: 'rgba(240,248,255,0.45)',
           fontSize: '0.9rem',
@@ -206,10 +238,12 @@ function SplashScreen({ onDone }) {
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
           margin: 0,
+          animation: 'splashContentIn 0.5s ease-in-out 2.7s both',
         }}>
           Charter Catch Tracker
         </p>
       </div>
+
     </div>
   )
 }
