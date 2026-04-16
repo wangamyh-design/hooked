@@ -200,10 +200,11 @@ function SplashScreen({ onDone }) {
         top: '72vh',
         left: 0, right: 0,
         display: 'flex', justifyContent: 'center',
-        fontSize: '2.5rem', lineHeight: 1,
         animation: 'fishRise 1s ease-in-out 1.5s both',
       }}>
-        🎣
+        <div style={{ fontSize: '2.5rem', lineHeight: 1, transform: 'rotate(90deg)' }}>
+          🐟
+        </div>
       </div>
 
       {/* ── Phase 3: HOOKED wordmark + subtitle (delay 2.5s) ── */}
